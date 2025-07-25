@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 // Patient structure
 typedef struct Patient {
     int id;
@@ -33,11 +39,11 @@ Patient* createPatient(int id, const char* name, int age, const char* disease) {
 }
 
 // Add patient to the list
-void add_patient(int id, const char* name, int age, const char* disease) {
-    // Check for duplicate ID
+DLL_EXPORT void add_patient(int id, const char* name, int age, const char* disease) {
     Patient* temp = head;
     while (temp != NULL) {
         if (temp->id == id) {
+            printf("Duplicate ID found at address: %p\n", (void*)temp);
             return; // Duplicate found
         }
         temp = temp->next;
@@ -54,21 +60,25 @@ void add_patient(int id, const char* name, int age, const char* disease) {
             temp = temp->next;
         temp->next = newPatient;
     }
+
+    printf("Added patient at memory address: %p\n", (void*)newPatient);
 }
 
 // Search patient by ID
 Patient* search_patient(int id) {
     Patient* temp = head;
     while (temp != NULL) {
-        if (temp->id == id)
+        if (temp->id == id) {
+            printf("Found patient at address: %p\n", (void*)temp);
             return temp;
+        }
         temp = temp->next;
     }
     return NULL;
 }
 
 // Get patient details (for Python call)
-int get_patient_info(int id, char* name, int* age, char* disease) {
+DLL_EXPORT int get_patient_info(int id, char* name, int* age, char* disease) {
     Patient* p = search_patient(id);
     if (!p) return 0;
 
@@ -79,7 +89,7 @@ int get_patient_info(int id, char* name, int* age, char* disease) {
 }
 
 // Free all patient memory
-void free_all_patients() {
+DLL_EXPORT void free_all_patients() {
     Patient* temp;
     while (head != NULL) {
         temp = head;
