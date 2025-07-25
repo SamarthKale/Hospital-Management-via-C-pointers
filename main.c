@@ -13,6 +13,12 @@ typedef struct Patient {
 
 Patient* head = NULL; // Head pointer for linked list
 
+// Clear input buffer to avoid leftover characters
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 // Function to create a new patient node
 Patient* createPatient(int id, char name[], int age, char disease[]) {
     Patient* newPatient = (Patient*)malloc(sizeof(Patient));
@@ -29,14 +35,39 @@ void addPatient() {
     int id, age;
     char name[50], disease[50];
 
-    printf("\nEnter Patient ID: ");
-    scanf("%d", &id);
+    printf("\nEnter Patient ID(Number): ");
+    if (scanf("%d", &id) != 1) {
+        printf("Invalid ID. Please enter a numeric value.\n");
+        clearInputBuffer();
+        return;
+    }
+    clearInputBuffer();
+
     printf("Enter Patient Name: ");
-    scanf(" %[^\n]", name);
+    fgets(name, sizeof(name), stdin);
+    name[strcspn(name, "\n")] = '\0';  // Remove trailing newline
+
     printf("Enter Patient Age: ");
-    scanf("%d", &age);
+    if (scanf("%d", &age) != 1) {
+        printf("Invalid age. Please enter a numeric value.\n");
+        clearInputBuffer();
+        return;
+    }
+    clearInputBuffer();
+
     printf("Enter Disease: ");
-    scanf(" %[^\n]", disease);
+    fgets(disease, sizeof(disease), stdin);
+    disease[strcspn(disease, "\n")] = '\0';
+
+    // Check for duplicate ID
+    Patient* temp = head;
+    while (temp != NULL) {
+        if (temp->id == id) {
+            printf("A patient with ID %d already exists.\n", id);
+            return;
+        }
+        temp = temp->next;
+    }
 
     Patient* newPatient = createPatient(id, name, age, disease);
 
@@ -61,8 +92,11 @@ void viewPatients() {
 
     Patient* temp = head;
     printf("\n--- Patient List ---\n");
+    printf("----------------------------------------------------\n");
+    printf("ID\tName\t\tAge\tDisease\n");
+    printf("----------------------------------------------------\n");
     while (temp != NULL) {
-        printf("\nID: %d\nName: %s\nAge: %d\nDisease: %s\n", temp->id, temp->name, temp->age, temp->disease);
+        printf("%d\t%-15s\t%d\t%s\n", temp->id, temp->name, temp->age, temp->disease);
         temp = temp->next;
     }
 }
@@ -71,7 +105,12 @@ void viewPatients() {
 void searchPatient() {
     int id;
     printf("\nEnter Patient ID to search: ");
-    scanf("%d", &id);
+    if (scanf("%d", &id) != 1) {
+        printf("Invalid input. Please enter a numeric ID.\n");
+        clearInputBuffer();
+        return;
+    }
+    clearInputBuffer();
 
     Patient* temp = head;
     while (temp != NULL) {
@@ -90,7 +129,12 @@ void searchPatient() {
 void deletePatient() {
     int id;
     printf("\nEnter Patient ID to delete: ");
-    scanf("%d", &id);
+    if (scanf("%d", &id) != 1) {
+        printf("Invalid input. Please enter a numeric ID.\n");
+        clearInputBuffer();
+        return;
+    }
+    clearInputBuffer();
 
     Patient* temp = head;
     Patient* prev = NULL;
@@ -115,6 +159,16 @@ void deletePatient() {
     printf("Patient record deleted.\n");
 }
 
+// Free all allocated memory
+void freeAllPatients() {
+    Patient* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
 // Main Menu
 int main() {
     int choice;
@@ -127,16 +181,25 @@ int main() {
         printf("4. Delete Patient\n");
         printf("5. Exit\n");
         printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Please enter a number between 1 and 5.\n");
+            clearInputBuffer();
+            continue;
+        }
 
         switch (choice) {
-        case 1: addPatient(); break;
-        case 2: viewPatients(); break;
-        case 3: searchPatient(); break;
-        case 4: deletePatient(); break;
-        case 5: printf("Exiting...\n"); break;
-        default: printf("Invalid choice.\n");
+            case 1: addPatient(); break;
+            case 2: viewPatients(); break;
+            case 3: searchPatient(); break;
+            case 4: deletePatient(); break;
+            case 5:
+                freeAllPatients();
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice. Please select from 1 to 5.\n");
         }
+
     } while (choice != 5);
 
     return 0;
