@@ -176,22 +176,34 @@ void freeAllPatients() {
     }
 }
 
-// Main Menu
 int main() {
     int choice;
-SetConsoleOutputCP(CP_UTF8);
+
+    // Set console to UTF-8 for emoji support (Windows only)
+    SetConsoleOutputCP(CP_UTF8);
+
     do {
-    printf("\nChoose an operation:\n");
-    printf(" 1. ➕ Add New Patient\n");
-    printf(" 2. 📋 View All Patients\n");
-    printf(" 3. 🔍 Search for a Patient\n");
-    printf(" 4. ❌ Delete a Patient Record\n");
-    printf(" 5. 🚪 Exit the System\n");
-    printf("--------------------------------------------\n");
-    printf("Enter your choice (1-5): ");
+        // Clear screen (cross-platform)
+        system("cls || clear");
+
+        printf("==================================================================\n");
+        printf("         🏥  HOSPITAL MANAGEMENT SYSTEM - MAIN MENU  🏥         \n");
+        printf("==================================================================\n");
+        printf("👋 Welcome! Please choose one of the following options:\n");
+        printf("------------------------------------------------------------------\n");
+        printf(" [1] ➕ Add New Patient         - Register a new patient record\n");
+        printf(" [2] 📋 View All Patients       - Display the full patient list\n");
+        printf(" [3] 🔍 Search for a Patient    - Lookup a patient by ID\n");
+        printf(" [4] ❌ Delete a Patient Record - Remove a patient from the system\n");
+        printf(" [5] 🚪 Exit the System         - Close the application\n");
+        printf("==================================================================\n");
+        printf("🖊️  Enter your choice (1 - 5): ");
+
         if (scanf("%d", &choice) != 1) {
-            printf("Invalid input. Please enter a number between 1 and 5.\n");
+            printf("\n⚠️  Invalid input! Please enter a number between 1 and 5.\n");
             clearInputBuffer();
+            printf("Press Enter to continue...");
+            getchar();
             continue;
         }
 
