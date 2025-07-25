@@ -45,7 +45,7 @@ void addPatient() {
 
     printf("Enter Patient Name: ");
     fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = '\0';  // Remove trailing newline
+    name[strcspn(name, "\n")] = '\0';
 
     printf("Enter Patient Age: ");
     if (scanf("%d", &age) != 1) {
@@ -81,6 +81,7 @@ void addPatient() {
     }
 
     printf("Patient added successfully!\n");
+    printf("Patient Memory Address: %p\n", (void*)newPatient);
 }
 
 // Display all patients
@@ -92,11 +93,13 @@ void viewPatients() {
 
     Patient* temp = head;
     printf("\n--- Patient List ---\n");
-    printf("----------------------------------------------------\n");
-    printf("ID\tName\t\tAge\tDisease\n");
-    printf("----------------------------------------------------\n");
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("ID\tName\t\tAge\tDisease\t\tMemory Address\n");
+    printf("----------------------------------------------------------------------------------------\n");
+
     while (temp != NULL) {
-        printf("%d\t%-15s\t%d\t%s\n", temp->id, temp->name, temp->age, temp->disease);
+        printf("%d\t%-15s\t%d\t%-15s\t%p\n",
+               temp->id, temp->name, temp->age, temp->disease, (void*)temp);
         temp = temp->next;
     }
 }
@@ -116,7 +119,8 @@ void searchPatient() {
     while (temp != NULL) {
         if (temp->id == id) {
             printf("\nPatient Found:\n");
-            printf("ID: %d\nName: %s\nAge: %d\nDisease: %s\n", temp->id, temp->name, temp->age, temp->disease);
+            printf("ID: %d\nName: %s\nAge: %d\nDisease: %s\nMemory Address: %p\n",
+                   temp->id, temp->name, temp->age, temp->disease, (void*)temp);
             return;
         }
         temp = temp->next;
@@ -155,6 +159,7 @@ void deletePatient() {
         prev->next = temp->next;
     }
 
+    printf("Deleting patient at memory address: %p\n", (void*)temp);
     free(temp);
     printf("Patient record deleted.\n");
 }
@@ -165,6 +170,7 @@ void freeAllPatients() {
     while (head != NULL) {
         temp = head;
         head = head->next;
+        printf("Freeing memory at address: %p\n", (void*)temp);
         free(temp);
     }
 }
