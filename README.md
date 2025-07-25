@@ -125,3 +125,5 @@ This is a **standalone C project** meant to demonstrate:
 - Most importantly use of Pointers 
 
 There’s no frontend, database, or web backend in this version. To visit that version change the branch to Frontend+C
+Visit the site to use it
+https://samarthkale.github.io/Hospital-Management-via-C-pointers/
