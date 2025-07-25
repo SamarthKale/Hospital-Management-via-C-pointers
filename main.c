@@ -180,13 +180,14 @@ int main() {
     int choice;
 
     do {
-        printf("\n--- Hospital Management System ---\n");
-        printf("1. Add Patient\n");
-        printf("2. View Patients\n");
-        printf("3. Search Patient\n");
-        printf("4. Delete Patient\n");
-        printf("5. Exit\n");
-        printf("Enter choice: ");
+    printf("\nChoose an operation:\n");
+    printf(" 1. ➕ Add New Patient\n");
+    printf(" 2. 📋 View All Patients\n");
+    printf(" 3. 🔍 Search for a Patient\n");
+    printf(" 4. ❌ Delete a Patient Record\n");
+    printf(" 5. 🚪 Exit the System\n");
+    printf("--------------------------------------------\n");
+    printf("Enter your choice (1-5): ");
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number between 1 and 5.\n");
             clearInputBuffer();
